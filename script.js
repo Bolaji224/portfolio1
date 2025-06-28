@@ -1,140 +1,77 @@
-// Wrap everything in DOMContentLoaded to ensure DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-  // Fix smooth scrolling
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      const targetId = this.getAttribute("href");
-      if (targetId === "#") return;
+// DOM Elements
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const nav = document.getElementById('nav');
+const themeToggle = document.getElementById('themeToggle');
+const navLinks = document.querySelectorAll('.nav-link');
+const contactForm = document.getElementById('contactForm');
 
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+// Mobile Menu Toggle
+mobileMenuToggle.addEventListener('click', () => {
+    mobileMenuToggle.classList.toggle('active');
+    nav.classList.toggle('active');
+});
 
-        // Close mobile menu if open
-        if (links.classList.contains("active")) {
-          toggleMenu();
-        }
-      }
-    });
-  });
-
-  // Improve typewriter effect
-  const typewriterText = [
-    "Software Developer",
-    "Web Developer",
-    "Tech Enthusiast",
-  ];
-  let textIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  const typewriterElement = document.querySelector(".typewritter-text");
-
-  function typeEffect() {
-    if (!typewriterElement) return;
-
-    const currentText = typewriterText[textIndex];
-
-    if (isDeleting) {
-      typewriterElement.textContent = currentText.substring(0, charIndex - 1);
-      charIndex--;
-    } else {
-      typewriterElement.textContent = currentText.substring(0, charIndex + 1);
-      charIndex++;
-    }
-
-    let typeSpeed = isDeleting ? 100 : 200;
-
-    if (!isDeleting && charIndex === currentText.length) {
-      typeSpeed = 2000; // Pause at end
-      isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      textIndex = (textIndex + 1) % typewriterText.length;
-    }
-
-    setTimeout(typeEffect, typeSpeed);
-  }
-
-  // Mobile menu functionality
-  const menuToggle = document.getElementById("menuToggle");
-  const links = document.querySelector(".links");
-  const icon = menuToggle?.querySelector("i");
-
-  function toggleMenu() {
-    if (!menuToggle || !links || !icon) return;
-
-    links.classList.toggle("active");
-    icon.classList.toggle("fa-bars");
-    icon.classList.toggle("fa-times");
-  }
-
-  if (menuToggle) {
-    menuToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleMenu();
-    });
-  }
-
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (
-      links?.classList.contains("active") &&
-      !e.target.closest(".nav-container")
-    ) {
-      toggleMenu();
-    }
-  });
-
-  // Prevent menu close when clicking inside
-  links?.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
-
-  // Start animations
-  typeEffect();
-
-  // Add scroll-based animations
-  const observerOptions = {
-    threshold: 0.2,
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("animate");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
-
-  // Observe elements for animation
-  document
-    .querySelectorAll(".service-item, .tech-item, .skill")
-    .forEach((el) => {
-      observer.observe(el);
+// Close mobile menu when clicking on nav links
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        mobileMenuToggle.classList.remove('active');
+        nav.classList.remove('active');
     });
 });
 
-document
-  .getElementById("contact-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent form from reloading the page
+// Theme Toggle
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+});
 
-    // Collect form data
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const message = document.getElementById("message").value;
+// Load saved theme preference
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+});
 
-    // Email recipient
-    const recipientEmail = "bolajimiracle6@gmail.com";
+// Smooth scrolling for navigation links
+function smoothScrollToSection(targetId) {
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+        const headerHeight = document.querySelector('.header').offsetHeight;
+        const targetPosition = targetSection.offsetTop - headerHeight;
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+}
 
-    // Construct mailto link
-    const mailtoLink = `mailto:${recipientEmail}?subject=Contact Form Submission from ${name}&body=Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+// Handle navigation link clicks
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        smoothScrollToSection(targetId);
+    });
+});
 
-    // Open the mail client
-    window.location.href = mailtoLink;
-  });
+// Active navigation highlighting
+function updateActiveNavLink() {
+    const sections = document.querySelectorAll('section[id]');
+    const scrollPosition = window.scrollY + 100;
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === #${sectionId}) {
+                    link.classList.add('active');
+                }
+            });
+        }
+    });
