@@ -287,10 +287,11 @@ body.dark-mode .theme-toggle .moon-icon {
 }
 
 .hero-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* try 40px, adjust as needed */
 }
+
 
 .hero-avatar {
     position: relative;
@@ -305,7 +306,7 @@ body.dark-mode .theme-toggle .moon-icon {
 
 .hero-avatar img {
     width: 100%;
-    height: 100%;
+    height: 400px;
     object-fit: cover;
 }
 
